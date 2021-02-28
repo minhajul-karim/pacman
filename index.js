@@ -69,5 +69,52 @@ layout.forEach((item, index) => {
   }
 })
 
-const pacIndex = 490
+let pacIndex = 490 // 364 391
 cells[pacIndex].classList.add('pacman')
+
+const isNextWallOrGhostHome = (nextPacIndex) => {
+  if (
+    !cells[nextPacIndex].classList.contains('wall') &&
+    !cells[nextPacIndex].classList.contains('ghost-home')
+  ) {
+    return false
+  }
+  return true
+}
+
+// Move pacman
+document.body.addEventListener('keydown', (event) => {
+  // Remove pacman class from current pacIndex
+  cells[pacIndex].classList.remove('pacman')
+  switch (event.key) {
+    case 'ArrowRight':
+      if (pacIndex === 391) pacIndex = 364
+      else if (!isNextWallOrGhostHome(pacIndex + 1)) {
+        pacIndex += 1
+      }
+      break
+
+    case 'ArrowLeft':
+      if (pacIndex === 364) pacIndex = 391
+      else if (!isNextWallOrGhostHome(pacIndex - 1)) {
+        pacIndex -= 1
+      }
+      break
+
+    case 'ArrowUp':
+      if (!isNextWallOrGhostHome(pacIndex - rows)) {
+        pacIndex -= rows
+      }
+      break
+
+    case 'ArrowDown':
+      if (!isNextWallOrGhostHome(pacIndex + rows)) {
+        pacIndex += rows
+      }
+      break
+
+    // No default
+  }
+  // Add pacman class to the next pacIndex
+  cells[pacIndex].classList.add('pacman')
+})

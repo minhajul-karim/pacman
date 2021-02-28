@@ -6,6 +6,7 @@
     "no-irregular-whitespace": 0,
     "no-unused-expressions": 0,
     "react/destructuring-assignment": 0,
+    "default-case": 0,
     "prettier/prettier": [
       "error",
       {
