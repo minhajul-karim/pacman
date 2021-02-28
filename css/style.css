@@ -1,0 +1,41 @@
+body {
+  margin: 1em;
+  background: #000;
+}
+
+.grids {
+  width: 560px;
+  height: 560px;
+  border: 10px solid #fff;
+  display: flex;
+  flex-wrap: wrap;
+  background: #fff;
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+}
+
+.pac-dot {
+  background: lightblue;
+  border: 8px solid #fff;
+  box-sizing: border-box;
+}
+
+.wall {
+  background: lightblue;
+}
+
+.score-booster {
+  background: orangered;
+  border-radius: 50%;
+}
+
+.pacman {
+  background: orange;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+}
