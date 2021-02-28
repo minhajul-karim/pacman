@@ -6,6 +6,13 @@
     4 - empty
  */
 
+/**
+ * TODO
+ * Create ghosts
+ * Eat score booster, earn 100 points & make ghosts scared for 10 sec
+ * Eat ghost in this 10 seconds
+ */
+
 const gridsSection = document.querySelector('.grids')
 const rows = 28
 const cells = []
@@ -72,6 +79,7 @@ layout.forEach((item, index) => {
 let pacIndex = 490 // 364 391
 cells[pacIndex].classList.add('pacman')
 
+// Function that checks if the next cell is a wall or ghost home
 const isNextWallOrGhostHome = (nextPacIndex) => {
   if (
     !cells[nextPacIndex].classList.contains('wall') &&
@@ -80,6 +88,18 @@ const isNextWallOrGhostHome = (nextPacIndex) => {
     return false
   }
   return true
+}
+
+const scoreText = document.getElementById('score-text')
+let score = 0
+
+// Function that helps pacman to eat pacdots
+const eatPacdot = (pacIndx) => {
+  if (cells[pacIndx].classList.contains('pac-dot')) {
+    cells[pacIndx].classList.remove('pac-dot')
+    score += 1
+    scoreText.textContent = score
+  }
 }
 
 // Move pacman
@@ -115,6 +135,7 @@ document.body.addEventListener('keydown', (event) => {
 
     // No default
   }
+  eatPacdot(pacIndex)
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman')
 })
