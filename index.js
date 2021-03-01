@@ -139,3 +139,36 @@ document.body.addEventListener('keydown', (event) => {
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman')
 })
+
+// const inkyIndex = 403 // 406
+// cells[inkyIndex].classList.add('inky')
+const ghosts = [
+  { name: 'inky', startIndex: 375, intervalId: null },
+  { name: 'pinky', startIndex: 380, intervalId: null },
+  { name: 'blinky', startIndex: 403, intervalId: null },
+  { name: 'blinky', startIndex: 408, intervalId: null },
+]
+
+// Direction to move ghosts
+const directions = [1, -1, rows, -rows]
+
+// Function to generate a random direction
+const getRandomDirection = () => Math.floor(Math.random() * directions.length)
+
+// Move ghosts
+ghosts.forEach((ghost) => {
+  let directionIndex = getRandomDirection()
+  ghost.intervalId = setInterval(() => {
+    // Generate new directionIndex every time if ghost is inside ghost home
+    if (cells[ghost.startIndex].classList.contains('ghost-home')) {
+      directionIndex = getRandomDirection()
+    }
+    // Find a direction where is no wall
+    while (cells[ghost.startIndex + directions[directionIndex]].classList.contains('wall')) {
+      directionIndex = getRandomDirection()
+    }
+    cells[ghost.startIndex].classList.remove('ghost')
+    ghost.startIndex += directions[directionIndex]
+    cells[ghost.startIndex].classList.add('ghost')
+  }, 200)
+})
