@@ -5,12 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PACMAN</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <div class="game-container">
-      <div class="grids"></div>
-      <p>Score: <span id="score-text">0</span></p>
+    <div class="container">
+      <div class="game-container">
+        <p class="game-over-text">Game Over!</p>
+      </div>
+      <div class="control-container">
+        <p>Score: <span id="score-text">0</span></p>
+        <button class="btn">Restart</button>
+        <br />
+        <a target="_blank" href="https://github.com/minhajul-karim/pacman"
+          >View code</a
+        >
+      </div>
     </div>
     <script src="index.pack.js"></script>
   </body>

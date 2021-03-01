@@ -2,22 +2,24 @@ body {
   margin: 1em;
   background: #000;
   color: #fff;
+  font-family: "Ranchers", cursive;
+  font-size: 25px;
+}
+
+.container {
+  display: flex;
+  /* justify-content: space-between; */
 }
 
 .game-container {
-  display: flex;
-  justify-content: space-between;
-  /* max-width: 900px;
-  margin: 0 auto; */
-}
-
-.grids {
   width: 560px;
   height: 560px;
   border: 10px solid #fff;
   display: flex;
   flex-wrap: wrap;
   background: #fff;
+  position: relative;
+  margin-right: 1em;
 }
 
 .cell {
@@ -60,4 +62,39 @@ body {
   background-size: cover;
   border: none;
   background-position: center;
+}
+
+.game-over-text {
+  position: absolute;
+  color: #fff;
+  font-size: 50px;
+  top: -100%;
+  left: -100%;
+}
+
+.diplay-game-over-text {
+  top: 30%;
+  left: 24%;
+  color: #000;
+}
+
+.control-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.btn {
+  background: #ff234f;
+  border: unset;
+  padding: 10px 20px;
+  font-family: "Ranchers", cursive;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.score-section {
+  text-align: right;
 }

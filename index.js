@@ -13,7 +13,7 @@
  * Eat ghost in this 10 seconds
  */
 
-const gridsSection = document.querySelector('.grids')
+const gameContainer = document.querySelector('.game-container')
 const rows = 28
 const cells = []
 // prettier-ignore
@@ -61,7 +61,7 @@ for (let i = 0; i < rows * rows; i += 1) {
   const cell = document.createElement('div')
   cell.classList.add('cell')
   cells.push(cell)
-  gridsSection.appendChild(cell)
+  gameContainer.appendChild(cell)
 }
 
 // Add classes based on their number from layout
@@ -101,12 +101,17 @@ const isNextWallOrGhostHome = (nextPacIndex) => {
 const scoreText = document.getElementById('score-text')
 let score = 0
 
+// Function that increments score
+const incrementScore = (newScore) => {
+  score += newScore
+  scoreText.textContent = score
+}
+
 // Function that helps pacman to eat pacdots
 const eatPacdot = (pacIndx) => {
   if (cells[pacIndx].classList.contains('pac-dot')) {
     cells[pacIndx].classList.remove('pac-dot')
-    score += 1
-    scoreText.textContent = score
+    incrementScore(1)
   }
 }
 
@@ -128,8 +133,7 @@ const unScareGhosts = () => {
 const eatBooster = (pacIndx) => {
   if (cells[pacIndx].classList.contains('score-booster')) {
     cells[pacIndx].classList.remove('score-booster')
-    score += 100
-    scoreText.textContent = score
+    incrementScore(100)
     // Scare ghosts
     scareGhosts()
     // Un-scare ghosts after 10 seconds
@@ -139,8 +143,8 @@ const eatBooster = (pacIndx) => {
   }
 }
 
-// Move pacman
-document.body.addEventListener('keyup', (event) => {
+// Function that helps to move pacman
+const movePacman = (event) => {
   // Remove pacman class from current pacIndex
   cells[pacIndex].classList.remove('pacman')
   switch (event.key) {
@@ -176,13 +180,25 @@ document.body.addEventListener('keyup', (event) => {
   eatBooster(pacIndex)
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman')
-})
+}
+
+// Move pacman via keyboard
+document.body.addEventListener('keyup', movePacman)
 
 // Direction to move ghosts
 const directions = [1, -1, rows, -rows]
 
 // Function to generate a random direction
 const getRandomDirection = () => Math.floor(Math.random() * directions.length)
+
+// Function to game over
+const gameOver = () => {
+  ghosts.forEach((ghost) => {
+    clearInterval(ghost.intervalId)
+  })
+  document.body.removeEventListener('keyup', movePacman)
+  document.querySelector('.game-over-text').classList.add('diplay-game-over-text')
+}
 
 // Move ghosts
 ghosts.forEach((ghost) => {
@@ -197,19 +213,30 @@ ghosts.forEach((ghost) => {
       directionIndex = getRandomDirection()
     }
 
-    // Display scared ghosts
+    // Remove ghost or scared-ghost class
     if (ghost.isScared) {
+      if (cells[ghost.startIndex].classList.contains('pacman')) {
+        incrementScore(200)
+      }
       cells[ghost.startIndex].classList.remove('ghost')
       cells[ghost.startIndex].classList.remove('scared-ghost')
     } else {
+      cells[ghost.startIndex].classList.contains('pacman') && gameOver()
       cells[ghost.startIndex].classList.remove('scared-ghost')
       cells[ghost.startIndex].classList.remove('ghost')
     }
 
+    // New ghost index
     ghost.startIndex += directions[directionIndex]
 
+    // Add ghost or scared-ghost class
     ghost.isScared
       ? cells[ghost.startIndex].classList.add('scared-ghost')
       : cells[ghost.startIndex].classList.add('ghost')
   }, 200)
+})
+
+// Reload window
+document.querySelector('.btn').addEventListener('click', () => {
+  location.reload()
 })

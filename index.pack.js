@@ -88,7 +88,7 @@
  * Eat ghost in this 10 seconds
  */
 
-var gridsSection = document.querySelector('.grids');
+var gameContainer = document.querySelector('.game-container');
 var rows = 28;
 var cells = [];
 // prettier-ignore
@@ -102,7 +102,7 @@ for (var i = 0; i < rows * rows; i += 1) {
   var cell = document.createElement('div');
   cell.classList.add('cell');
   cells.push(cell);
-  gridsSection.appendChild(cell);
+  gameContainer.appendChild(cell);
 }
 
 // Add classes based on their number from layout
@@ -139,12 +139,17 @@ var isNextWallOrGhostHome = function isNextWallOrGhostHome(nextPacIndex) {
 var scoreText = document.getElementById('score-text');
 var score = 0;
 
+// Function that increments score
+var incrementScore = function incrementScore(newScore) {
+  score += newScore;
+  scoreText.textContent = score;
+};
+
 // Function that helps pacman to eat pacdots
 var eatPacdot = function eatPacdot(pacIndx) {
   if (cells[pacIndx].classList.contains('pac-dot')) {
     cells[pacIndx].classList.remove('pac-dot');
-    score += 1;
-    scoreText.textContent = score;
+    incrementScore(1);
   }
 };
 
@@ -166,8 +171,7 @@ var unScareGhosts = function unScareGhosts() {
 var eatBooster = function eatBooster(pacIndx) {
   if (cells[pacIndx].classList.contains('score-booster')) {
     cells[pacIndx].classList.remove('score-booster');
-    score += 100;
-    scoreText.textContent = score;
+    incrementScore(100);
     // Scare ghosts
     scareGhosts();
     // Un-scare ghosts after 10 seconds
@@ -177,8 +181,8 @@ var eatBooster = function eatBooster(pacIndx) {
   }
 };
 
-// Move pacman
-document.body.addEventListener('keyup', function (event) {
+// Function that helps to move pacman
+var movePacman = function movePacman(event) {
   // Remove pacman class from current pacIndex
   cells[pacIndex].classList.remove('pacman');
   switch (event.key) {
@@ -212,7 +216,10 @@ document.body.addEventListener('keyup', function (event) {
   eatBooster(pacIndex);
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman');
-});
+};
+
+// Move pacman via keyboard
+document.body.addEventListener('keyup', movePacman);
 
 // Direction to move ghosts
 var directions = [1, -1, rows, -rows];
@@ -220,6 +227,15 @@ var directions = [1, -1, rows, -rows];
 // Function to generate a random direction
 var getRandomDirection = function getRandomDirection() {
   return Math.floor(Math.random() * directions.length);
+};
+
+// Function to game over
+var gameOver = function gameOver() {
+  ghosts.forEach(function (ghost) {
+    clearInterval(ghost.intervalId);
+  });
+  document.body.removeEventListener('keyup', movePacman);
+  document.querySelector('.game-over-text').classList.add('diplay-game-over-text');
 };
 
 // Move ghosts
@@ -235,19 +251,30 @@ ghosts.forEach(function (ghost) {
       directionIndex = getRandomDirection();
     }
 
-    // Display scared ghosts
+    // Remove ghost or scared-ghost class
     if (ghost.isScared) {
+      if (cells[ghost.startIndex].classList.contains('pacman')) {
+        incrementScore(200);
+      }
       cells[ghost.startIndex].classList.remove('ghost');
       cells[ghost.startIndex].classList.remove('scared-ghost');
     } else {
+      cells[ghost.startIndex].classList.contains('pacman') && gameOver();
       cells[ghost.startIndex].classList.remove('scared-ghost');
       cells[ghost.startIndex].classList.remove('ghost');
     }
 
+    // New ghost index
     ghost.startIndex += directions[directionIndex];
 
+    // Add ghost or scared-ghost class
     ghost.isScared ? cells[ghost.startIndex].classList.add('scared-ghost') : cells[ghost.startIndex].classList.add('ghost');
   }, 200);
+});
+
+// Reload window
+document.querySelector('.btn').addEventListener('click', function () {
+  location.reload();
 });
 
 /***/ })
