@@ -94,6 +94,9 @@ var cells = [];
 // prettier-ignore
 var layout = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 1, 1, 2, 2, 1, 1, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 2, 2, 2, 2, 2, 2, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 0, 0, 0, 4, 1, 2, 2, 2, 2, 2, 2, 1, 4, 0, 0, 0, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 2, 2, 2, 2, 2, 2, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
+// Ghosts information
+var ghosts = [{ name: 'inky', startIndex: 375, intervalId: null, isScared: false }, { name: 'pinky', startIndex: 380, intervalId: null, isScared: false }, { name: 'blinky', startIndex: 403, intervalId: null, isScared: false }, { name: 'blinky', startIndex: 408, intervalId: null, isScared: false }];
+
 // Create cells
 for (var i = 0; i < rows * rows; i += 1) {
   var cell = document.createElement('div');
@@ -122,7 +125,7 @@ layout.forEach(function (item, index) {
   }
 });
 
-var pacIndex = 490; // 364 391
+var pacIndex = 490;
 cells[pacIndex].classList.add('pacman');
 
 // Function that checks if the next cell is a wall or ghost home
@@ -145,8 +148,37 @@ var eatPacdot = function eatPacdot(pacIndx) {
   }
 };
 
+// Function that scares ghosts
+var scareGhosts = function scareGhosts() {
+  ghosts.forEach(function (ghost) {
+    ghost.isScared = true;
+  });
+};
+
+// Function that un-scares ghosts
+var unScareGhosts = function unScareGhosts() {
+  ghosts.forEach(function (ghost) {
+    ghost.isScared = false;
+  });
+};
+
+// Function that helps pacman to score booster
+var eatBooster = function eatBooster(pacIndx) {
+  if (cells[pacIndx].classList.contains('score-booster')) {
+    cells[pacIndx].classList.remove('score-booster');
+    score += 100;
+    scoreText.textContent = score;
+    // Scare ghosts
+    scareGhosts();
+    // Un-scare ghosts after 10 seconds
+    setTimeout(function () {
+      unScareGhosts();
+    }, 10000);
+  }
+};
+
 // Move pacman
-document.body.addEventListener('keydown', function (event) {
+document.body.addEventListener('keyup', function (event) {
   // Remove pacman class from current pacIndex
   cells[pacIndex].classList.remove('pacman');
   switch (event.key) {
@@ -177,13 +209,10 @@ document.body.addEventListener('keydown', function (event) {
     // No default
   }
   eatPacdot(pacIndex);
+  eatBooster(pacIndex);
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman');
 });
-
-// const inkyIndex = 403 // 406
-// cells[inkyIndex].classList.add('inky')
-var ghosts = [{ name: 'inky', startIndex: 375, intervalId: null }, { name: 'pinky', startIndex: 380, intervalId: null }, { name: 'blinky', startIndex: 403, intervalId: null }, { name: 'blinky', startIndex: 408, intervalId: null }];
 
 // Direction to move ghosts
 var directions = [1, -1, rows, -rows];
@@ -205,9 +234,19 @@ ghosts.forEach(function (ghost) {
     while (cells[ghost.startIndex + directions[directionIndex]].classList.contains('wall')) {
       directionIndex = getRandomDirection();
     }
-    cells[ghost.startIndex].classList.remove('ghost');
+
+    // Display scared ghosts
+    if (ghost.isScared) {
+      cells[ghost.startIndex].classList.remove('ghost');
+      cells[ghost.startIndex].classList.remove('scared-ghost');
+    } else {
+      cells[ghost.startIndex].classList.remove('scared-ghost');
+      cells[ghost.startIndex].classList.remove('ghost');
+    }
+
     ghost.startIndex += directions[directionIndex];
-    cells[ghost.startIndex].classList.add('ghost');
+
+    ghost.isScared ? cells[ghost.startIndex].classList.add('scared-ghost') : cells[ghost.startIndex].classList.add('ghost');
   }, 200);
 });
 

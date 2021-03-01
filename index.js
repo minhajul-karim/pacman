@@ -48,6 +48,14 @@ const layout = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 
   ]
 
+// Ghosts information
+const ghosts = [
+  { name: 'inky', startIndex: 375, intervalId: null, isScared: false },
+  { name: 'pinky', startIndex: 380, intervalId: null, isScared: false },
+  { name: 'blinky', startIndex: 403, intervalId: null, isScared: false },
+  { name: 'blinky', startIndex: 408, intervalId: null, isScared: false },
+]
+
 // Create cells
 for (let i = 0; i < rows * rows; i += 1) {
   const cell = document.createElement('div')
@@ -76,7 +84,7 @@ layout.forEach((item, index) => {
   }
 })
 
-let pacIndex = 490 // 364 391
+let pacIndex = 490
 cells[pacIndex].classList.add('pacman')
 
 // Function that checks if the next cell is a wall or ghost home
@@ -102,8 +110,37 @@ const eatPacdot = (pacIndx) => {
   }
 }
 
+// Function that scares ghosts
+const scareGhosts = () => {
+  ghosts.forEach((ghost) => {
+    ghost.isScared = true
+  })
+}
+
+// Function that un-scares ghosts
+const unScareGhosts = () => {
+  ghosts.forEach((ghost) => {
+    ghost.isScared = false
+  })
+}
+
+// Function that helps pacman to score booster
+const eatBooster = (pacIndx) => {
+  if (cells[pacIndx].classList.contains('score-booster')) {
+    cells[pacIndx].classList.remove('score-booster')
+    score += 100
+    scoreText.textContent = score
+    // Scare ghosts
+    scareGhosts()
+    // Un-scare ghosts after 10 seconds
+    setTimeout(() => {
+      unScareGhosts()
+    }, 10000)
+  }
+}
+
 // Move pacman
-document.body.addEventListener('keydown', (event) => {
+document.body.addEventListener('keyup', (event) => {
   // Remove pacman class from current pacIndex
   cells[pacIndex].classList.remove('pacman')
   switch (event.key) {
@@ -136,18 +173,10 @@ document.body.addEventListener('keydown', (event) => {
     // No default
   }
   eatPacdot(pacIndex)
+  eatBooster(pacIndex)
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman')
 })
-
-// const inkyIndex = 403 // 406
-// cells[inkyIndex].classList.add('inky')
-const ghosts = [
-  { name: 'inky', startIndex: 375, intervalId: null },
-  { name: 'pinky', startIndex: 380, intervalId: null },
-  { name: 'blinky', startIndex: 403, intervalId: null },
-  { name: 'blinky', startIndex: 408, intervalId: null },
-]
 
 // Direction to move ghosts
 const directions = [1, -1, rows, -rows]
@@ -167,8 +196,20 @@ ghosts.forEach((ghost) => {
     while (cells[ghost.startIndex + directions[directionIndex]].classList.contains('wall')) {
       directionIndex = getRandomDirection()
     }
-    cells[ghost.startIndex].classList.remove('ghost')
+
+    // Display scared ghosts
+    if (ghost.isScared) {
+      cells[ghost.startIndex].classList.remove('ghost')
+      cells[ghost.startIndex].classList.remove('scared-ghost')
+    } else {
+      cells[ghost.startIndex].classList.remove('scared-ghost')
+      cells[ghost.startIndex].classList.remove('ghost')
+    }
+
     ghost.startIndex += directions[directionIndex]
-    cells[ghost.startIndex].classList.add('ghost')
+
+    ghost.isScared
+      ? cells[ghost.startIndex].classList.add('scared-ghost')
+      : cells[ghost.startIndex].classList.add('ghost')
   }, 200)
 })
