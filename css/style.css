@@ -6,9 +6,12 @@ body {
   font-size: 25px;
 }
 
+a {
+  color: #fff;
+}
+
 .container {
   display: flex;
-  /* justify-content: space-between; */
 }
 
 .game-container {
@@ -44,21 +47,21 @@ body {
 }
 
 .pacman {
-  background: orange;
+  background: yellow;
   border: none;
   border-radius: 50%;
   padding: 0;
 }
 
 .ghost {
-  background: url(https://toppng.com/uploads/preview/pixel-pixels-games-ios-appstore-free-freebie-pac-man-ghost-small-11563217796cswpdvkwbu.png);
+  background: url(../images/ghost.png);
   background-size: cover;
   border: none;
   background-position: center;
 }
 
 .scared-ghost {
-  background: url(https://www.pngjoy.com/pngm/129/2629700_pacman-ghost-dark-blue-pacman-ghost-png-download.png);
+  background: url(../images/scared_ghost.jpeg);
   background-size: cover;
   border: none;
   background-position: center;

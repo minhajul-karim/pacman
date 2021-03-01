@@ -81,13 +81,6 @@
     4 - empty
  */
 
-/**
- * TODO
- * Create ghosts
- * Eat score booster, earn 100 points & make ghosts scared for 10 sec
- * Eat ghost in this 10 seconds
- */
-
 var gameContainer = document.querySelector('.game-container');
 var rows = 28;
 var cells = [];
@@ -231,11 +224,11 @@ var getRandomDirection = function getRandomDirection() {
 
 // Function to game over
 var gameOver = function gameOver() {
+  document.body.removeEventListener('keyup', movePacman);
+  document.querySelector('.game-over-text').classList.add('diplay-game-over-text');
   ghosts.forEach(function (ghost) {
     clearInterval(ghost.intervalId);
   });
-  document.body.removeEventListener('keyup', movePacman);
-  document.querySelector('.game-over-text').classList.add('diplay-game-over-text');
 };
 
 // Move ghosts
@@ -253,9 +246,8 @@ ghosts.forEach(function (ghost) {
 
     // Remove ghost or scared-ghost class
     if (ghost.isScared) {
-      if (cells[ghost.startIndex].classList.contains('pacman')) {
-        incrementScore(200);
-      }
+      // Bonus point when pacman eats a scared ghost
+      cells[ghost.startIndex].classList.contains('pacman') && incrementScore(200);
       cells[ghost.startIndex].classList.remove('ghost');
       cells[ghost.startIndex].classList.remove('scared-ghost');
     } else {
