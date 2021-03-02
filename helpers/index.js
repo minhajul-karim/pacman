@@ -1,9 +1,11 @@
+/* eslint-disable no-sequences */
+/* eslint-disable prettier/prettier */
 const scoreText = document.getElementById('score-text')
 let score = 0
 
 // Function that increments score
-export const incrementScore = (newScore) => {
-  score += newScore
+export const incrementScore = (newScore, resetScore = false) => {
+  resetScore ? (score = newScore) : (score += newScore)
   scoreText.textContent = score
 }
 
@@ -56,3 +58,12 @@ export const eatBooster = (cells, pacIndx, ghosts) => {
 
 // Function to generate a random direction
 export const getRandomDirection = (directions) => Math.floor(Math.random() * directions.length)
+
+export class Ghost {
+  constructor(startIndex) {
+    this.startIndex = startIndex,
+    this.currentIndex = startIndex,
+    this.isScared = false,
+    this.intervalId = null
+  }
+}

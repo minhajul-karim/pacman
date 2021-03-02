@@ -115,60 +115,55 @@ var pacIndex = 490;
 cells[pacIndex].classList.add('pacman');
 
 // Ghosts information
-var ghosts = [{ name: 'inky', startIndex: 375, intervalId: null, isScared: false }, { name: 'pinky', startIndex: 380, intervalId: null, isScared: false }, { name: 'blinky', startIndex: 403, intervalId: null, isScared: false }, { name: 'blinky', startIndex: 408, intervalId: null, isScared: false }];
-
-// Variable to determine whether the game has started or not
-var hasGameStarted = false;
+var ghosts = [new _helpers.Ghost(375), new _helpers.Ghost(380), new _helpers.Ghost(403), new _helpers.Ghost(408)];
 
 // Function that helps to move pacman
 var movePacman = function movePacman(event) {
-  if (hasGameStarted) {
-    // Remove pacman class from current pacIndex
-    cells[pacIndex].classList.remove('pacman');
-    switch (event.key) {
-      case 'ArrowRight':
-        if (pacIndex === 391) pacIndex = 364;else if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex + 1)) {
-          pacIndex += 1;
-        }
-        break;
+  // Remove pacman class from current pacIndex
+  cells[pacIndex].classList.remove('pacman');
+  switch (event.key) {
+    case 'ArrowRight':
+      if (pacIndex === 391) pacIndex = 364;else if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex + 1)) {
+        pacIndex += 1;
+      }
+      break;
 
-      case 'ArrowLeft':
-        if (pacIndex === 364) pacIndex = 391;else if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex - 1)) {
-          pacIndex -= 1;
-        }
-        break;
+    case 'ArrowLeft':
+      if (pacIndex === 364) pacIndex = 391;else if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex - 1)) {
+        pacIndex -= 1;
+      }
+      break;
 
-      case 'ArrowUp':
-        if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex - rows)) {
-          pacIndex -= rows;
-        }
-        break;
+    case 'ArrowUp':
+      if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex - rows)) {
+        pacIndex -= rows;
+      }
+      break;
 
-      case 'ArrowDown':
-        if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex + rows)) {
-          pacIndex += rows;
-        }
-        break;
+    case 'ArrowDown':
+      if (!(0, _helpers.isNextWallOrGhostHome)(cells, pacIndex + rows)) {
+        pacIndex += rows;
+      }
+      break;
 
-      // No default
-    }
-    (0, _helpers.eatPacdot)(cells, pacIndex);
-    (0, _helpers.eatBooster)(cells, pacIndex, ghosts);
-    // Add pacman class to the next pacIndex
-    cells[pacIndex].classList.add('pacman');
+    // No default
   }
+  (0, _helpers.eatPacdot)(cells, pacIndex);
+  (0, _helpers.eatBooster)(cells, pacIndex, ghosts);
+  // Add pacman class to the next pacIndex
+  cells[pacIndex].classList.add('pacman');
 };
-
-// Move pacman via keyboard
-document.body.addEventListener('keyup', movePacman);
 
 // Directions to move ghosts
 var arrOfDirections = [1, -1, rows, -rows];
 
+// Game over text
+var gameOverText = document.querySelector('.game-over-text');
+
 // Function to game over
 var gameOver = function gameOver() {
   document.body.removeEventListener('keyup', movePacman);
-  document.querySelector('.game-over-text').classList.add('diplay-game-over-text');
+  gameOverText.classList.add('diplay-game-over-text');
   ghosts.forEach(function (ghost) {
     clearInterval(ghost.intervalId);
   });
@@ -180,40 +175,63 @@ var moveGhosts = function moveGhosts() {
     var directionIndex = (0, _helpers.getRandomDirection)(arrOfDirections);
     ghost.intervalId = setInterval(function () {
       // Generate new directionIndex every time if ghost is inside ghost home
-      if (cells[ghost.startIndex].classList.contains('ghost-home')) {
+      if (cells[ghost.currentIndex].classList.contains('ghost-home')) {
         directionIndex = (0, _helpers.getRandomDirection)(arrOfDirections);
       }
       // Find a direction where is no wall
-      while (cells[ghost.startIndex + arrOfDirections[directionIndex]].classList.contains('wall')) {
+      while (cells[ghost.currentIndex + arrOfDirections[directionIndex]].classList.contains('wall')) {
         directionIndex = (0, _helpers.getRandomDirection)(arrOfDirections);
       }
 
       // Remove ghost or scared-ghost class
       if (ghost.isScared) {
         // Bonus point when pacman eats a scared ghost
-        cells[ghost.startIndex].classList.contains('pacman') && (0, _helpers.incrementScore)(200);
-        cells[ghost.startIndex].classList.remove('ghost');
-        cells[ghost.startIndex].classList.remove('scared-ghost');
+        cells[ghost.currentIndex].classList.contains('pacman') && (0, _helpers.incrementScore)(200);
+        cells[ghost.currentIndex].classList.remove('ghost');
+        cells[ghost.currentIndex].classList.remove('scared-ghost');
       } else {
-        cells[ghost.startIndex].classList.contains('pacman') && gameOver();
-        cells[ghost.startIndex].classList.remove('scared-ghost');
-        cells[ghost.startIndex].classList.remove('ghost');
+        cells[ghost.currentIndex].classList.contains('pacman') && gameOver();
+        cells[ghost.currentIndex].classList.remove('scared-ghost');
+        cells[ghost.currentIndex].classList.remove('ghost');
       }
 
       // New ghost index
-      ghost.startIndex += arrOfDirections[directionIndex];
+      ghost.currentIndex += arrOfDirections[directionIndex];
 
       // Add ghost or scared-ghost class
-      ghost.isScared ? cells[ghost.startIndex].classList.add('scared-ghost') : cells[ghost.startIndex].classList.add('ghost');
+      ghost.isScared ? cells[ghost.currentIndex].classList.add('scared-ghost') : cells[ghost.currentIndex].classList.add('ghost');
     }, 200);
   });
+};
+
+// Function to restart the game
+var resetGame = function resetGame() {
+  // Hide game over text
+  gameOverText.classList.remove('diplay-game-over-text');
+  // Move ghosts to initial positions and timerIds to null
+  ghosts.forEach(function (ghost) {
+    // Remove current ghosts
+    cells[ghost.currentIndex].classList.remove('ghost');
+    // Reset ghost positions
+    ghost.currentIndex = ghost.startIndex;
+    clearInterval(ghost.intervalId);
+    ghost.intervalId = null;
+  });
+  // Reset score
+  (0, _helpers.incrementScore)(0, true);
+  // Reset pacman position
+  cells[pacIndex].classList.remove('pacman');
+  pacIndex = 490;
+  cells[pacIndex].classList.add('pacman');
 };
 
 // Handle clicking start/restart button
 var startBtn = document.getElementById('start-btn');
 startBtn.addEventListener('click', function () {
-  hasGameStarted = !hasGameStarted;
-  hasGameStarted && moveGhosts();
+  resetGame();
+  // Move pacman via keyboard
+  document.body.addEventListener('keyup', movePacman);
+  moveGhosts();
 });
 
 /***/ }),
@@ -226,12 +244,19 @@ startBtn.addEventListener('click', function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/* eslint-disable no-sequences */
+/* eslint-disable prettier/prettier */
 var scoreText = document.getElementById('score-text');
 var score = 0;
 
 // Function that increments score
 var incrementScore = exports.incrementScore = function incrementScore(newScore) {
-  score += newScore;
+  var resetScore = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  resetScore ? score = newScore : score += newScore;
   scoreText.textContent = score;
 };
 
@@ -282,6 +307,12 @@ var eatBooster = exports.eatBooster = function eatBooster(cells, pacIndx, ghosts
 // Function to generate a random direction
 var getRandomDirection = exports.getRandomDirection = function getRandomDirection(directions) {
   return Math.floor(Math.random() * directions.length);
+};
+
+var Ghost = exports.Ghost = function Ghost(startIndex) {
+  _classCallCheck(this, Ghost);
+
+  this.startIndex = startIndex, this.currentIndex = startIndex, this.isScared = false, this.intervalId = null;
 };
 
 /***/ })

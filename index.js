@@ -2,6 +2,7 @@ import {
   eatBooster,
   eatPacdot,
   getRandomDirection,
+  Ghost,
   incrementScore,
   isNextWallOrGhostHome
 } from './helpers'
@@ -75,67 +76,57 @@ let pacIndex = 490
 cells[pacIndex].classList.add('pacman')
 
 // Ghosts information
-const ghosts = [
-  { name: 'inky', startIndex: 375, intervalId: null, isScared: false },
-  { name: 'pinky', startIndex: 380, intervalId: null, isScared: false },
-  { name: 'blinky', startIndex: 403, intervalId: null, isScared: false },
-  { name: 'blinky', startIndex: 408, intervalId: null, isScared: false }
-]
-
-// Variable to determine whether the game has started or not
-let hasGameStarted = false
+const ghosts = [new Ghost(375), new Ghost(380), new Ghost(403), new Ghost(408)]
 
 // Function that helps to move pacman
 const movePacman = (event) => {
-  if (hasGameStarted) {
-    // Remove pacman class from current pacIndex
-    cells[pacIndex].classList.remove('pacman')
-    switch (event.key) {
-      case 'ArrowRight':
-        if (pacIndex === 391) pacIndex = 364
-        else if (!isNextWallOrGhostHome(cells, pacIndex + 1)) {
-          pacIndex += 1
-        }
-        break
+  // Remove pacman class from current pacIndex
+  cells[pacIndex].classList.remove('pacman')
+  switch (event.key) {
+    case 'ArrowRight':
+      if (pacIndex === 391) pacIndex = 364
+      else if (!isNextWallOrGhostHome(cells, pacIndex + 1)) {
+        pacIndex += 1
+      }
+      break
 
-      case 'ArrowLeft':
-        if (pacIndex === 364) pacIndex = 391
-        else if (!isNextWallOrGhostHome(cells, pacIndex - 1)) {
-          pacIndex -= 1
-        }
-        break
+    case 'ArrowLeft':
+      if (pacIndex === 364) pacIndex = 391
+      else if (!isNextWallOrGhostHome(cells, pacIndex - 1)) {
+        pacIndex -= 1
+      }
+      break
 
-      case 'ArrowUp':
-        if (!isNextWallOrGhostHome(cells, pacIndex - rows)) {
-          pacIndex -= rows
-        }
-        break
+    case 'ArrowUp':
+      if (!isNextWallOrGhostHome(cells, pacIndex - rows)) {
+        pacIndex -= rows
+      }
+      break
 
-      case 'ArrowDown':
-        if (!isNextWallOrGhostHome(cells, pacIndex + rows)) {
-          pacIndex += rows
-        }
-        break
+    case 'ArrowDown':
+      if (!isNextWallOrGhostHome(cells, pacIndex + rows)) {
+        pacIndex += rows
+      }
+      break
 
-      // No default
-    }
-    eatPacdot(cells, pacIndex)
-    eatBooster(cells, pacIndex, ghosts)
-    // Add pacman class to the next pacIndex
-    cells[pacIndex].classList.add('pacman')
+    // No default
   }
+  eatPacdot(cells, pacIndex)
+  eatBooster(cells, pacIndex, ghosts)
+  // Add pacman class to the next pacIndex
+  cells[pacIndex].classList.add('pacman')
 }
-
-// Move pacman via keyboard
-document.body.addEventListener('keyup', movePacman)
 
 // Directions to move ghosts
 const arrOfDirections = [1, -1, rows, -rows]
 
+// Game over text
+const gameOverText = document.querySelector('.game-over-text')
+
 // Function to game over
 const gameOver = () => {
   document.body.removeEventListener('keyup', movePacman)
-  document.querySelector('.game-over-text').classList.add('diplay-game-over-text')
+  gameOverText.classList.add('diplay-game-over-text')
   ghosts.forEach((ghost) => {
     clearInterval(ghost.intervalId)
   })
@@ -147,40 +138,65 @@ const moveGhosts = () => {
     let directionIndex = getRandomDirection(arrOfDirections)
     ghost.intervalId = setInterval(() => {
       // Generate new directionIndex every time if ghost is inside ghost home
-      if (cells[ghost.startIndex].classList.contains('ghost-home')) {
+      if (cells[ghost.currentIndex].classList.contains('ghost-home')) {
         directionIndex = getRandomDirection(arrOfDirections)
       }
       // Find a direction where is no wall
-      while (cells[ghost.startIndex + arrOfDirections[directionIndex]].classList.contains('wall')) {
+      while (
+        cells[ghost.currentIndex + arrOfDirections[directionIndex]].classList.contains('wall')
+      ) {
         directionIndex = getRandomDirection(arrOfDirections)
       }
 
       // Remove ghost or scared-ghost class
       if (ghost.isScared) {
         // Bonus point when pacman eats a scared ghost
-        cells[ghost.startIndex].classList.contains('pacman') && incrementScore(200)
-        cells[ghost.startIndex].classList.remove('ghost')
-        cells[ghost.startIndex].classList.remove('scared-ghost')
+        cells[ghost.currentIndex].classList.contains('pacman') && incrementScore(200)
+        cells[ghost.currentIndex].classList.remove('ghost')
+        cells[ghost.currentIndex].classList.remove('scared-ghost')
       } else {
-        cells[ghost.startIndex].classList.contains('pacman') && gameOver()
-        cells[ghost.startIndex].classList.remove('scared-ghost')
-        cells[ghost.startIndex].classList.remove('ghost')
+        cells[ghost.currentIndex].classList.contains('pacman') && gameOver()
+        cells[ghost.currentIndex].classList.remove('scared-ghost')
+        cells[ghost.currentIndex].classList.remove('ghost')
       }
 
       // New ghost index
-      ghost.startIndex += arrOfDirections[directionIndex]
+      ghost.currentIndex += arrOfDirections[directionIndex]
 
       // Add ghost or scared-ghost class
       ghost.isScared
-        ? cells[ghost.startIndex].classList.add('scared-ghost')
-        : cells[ghost.startIndex].classList.add('ghost')
+        ? cells[ghost.currentIndex].classList.add('scared-ghost')
+        : cells[ghost.currentIndex].classList.add('ghost')
     }, 200)
   })
+}
+
+// Function to restart the game
+const resetGame = () => {
+  // Hide game over text
+  gameOverText.classList.remove('diplay-game-over-text')
+  // Move ghosts to initial positions and timerIds to null
+  ghosts.forEach((ghost) => {
+    // Remove current ghosts
+    cells[ghost.currentIndex].classList.remove('ghost')
+    // Reset ghost positions
+    ghost.currentIndex = ghost.startIndex
+    clearInterval(ghost.intervalId)
+    ghost.intervalId = null
+  })
+  // Reset score
+  incrementScore(0, true)
+  // Reset pacman position
+  cells[pacIndex].classList.remove('pacman')
+  pacIndex = 490
+  cells[pacIndex].classList.add('pacman')
 }
 
 // Handle clicking start/restart button
 const startBtn = document.getElementById('start-btn')
 startBtn.addEventListener('click', () => {
-  hasGameStarted = !hasGameStarted
-  hasGameStarted && moveGhosts()
+  resetGame()
+  // Move pacman via keyboard
+  document.body.addEventListener('keyup', movePacman)
+  moveGhosts()
 })
