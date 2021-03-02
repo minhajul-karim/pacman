@@ -1,10 +1,12 @@
 import {
-  eatBooster,
-  eatPacdot,
+  drawGrids,
   getRandomDirection,
   Ghost,
+  hasEatenPacdot,
+  hasEatenScoreBooster,
   incrementScore,
-  isNextWallOrGhostHome
+  isNextWallOrGhostHome,
+  unScareGhosts
 } from './helpers'
 
 // Create a grid of 28 X 28 cells
@@ -51,32 +53,41 @@ for (let i = 0; i < rows * rows; i += 1) {
   gameContainer.appendChild(cell)
 }
 
-// Add classes to cell divs
-layout.forEach((item, index) => {
-  switch (item) {
-    case 0:
-      cells[index].classList.add('pac-dot')
-      break
-    case 1:
-      cells[index].classList.add('wall')
-      break
-    case 2:
-      cells[index].classList.add('ghost-home')
-      break
-    case 3:
-      cells[index].classList.add('score-booster')
-      break
-    default:
-      cells[index].classList.add('empty')
-  }
-})
+// Draw grids
+drawGrids(layout, cells)
+
+// Ghosts information
+const ghosts = [new Ghost(375), new Ghost(380), new Ghost(403), new Ghost(408)]
 
 // Place pacman in the grid
 let pacIndex = 490
 cells[pacIndex].classList.add('pacman')
 
-// Ghosts information
-const ghosts = [new Ghost(375), new Ghost(380), new Ghost(403), new Ghost(408)]
+// Game over text
+const gameOverText = document.querySelector('.game-over-text')
+
+let timerId = null
+
+// Function to game over
+const gameOver = (message, listenerFunction) => {
+  // Remove event listener
+  document.body.removeEventListener('keyup', listenerFunction)
+  // Display message
+  gameOverText.textContent = message
+  gameOverText.classList.add('diplay-game-over-text')
+  // Clear interval ids of all ghosts
+  ghosts.forEach((ghost) => {
+    clearInterval(ghost.intervalId)
+  })
+  // Clear timer id of scared ghosts
+  clearTimeout(timerId)
+  // Unscare ghosts right now
+  unScareGhosts(ghosts)
+}
+
+// Number of pacdots and score boosters
+let numOfPacDots = 234
+let numOfScoreBoosters = 4
 
 // Function that helps to move pacman
 const movePacman = (event) => {
@@ -111,26 +122,32 @@ const movePacman = (event) => {
 
     // No default
   }
-  eatPacdot(cells, pacIndex)
-  eatBooster(cells, pacIndex, ghosts)
+
+  // Check if pacman has eaten a pacdot
+  if (hasEatenPacdot(cells, pacIndex)) {
+    // Decrement the number of pacdots
+    numOfPacDots -= 1
+  }
+
+  // Check if pacman has eated a score booster
+  const returnVal = hasEatenScoreBooster(cells, pacIndex, ghosts)
+  if (typeof returnVal === 'number') {
+    timerId = returnVal
+    // Decrement the number of score boosters
+    numOfScoreBoosters -= 1
+  }
+
+  // if (numOfPacDots === 0 && numOfScoreBoosters === 0) {
+  if (numOfPacDots === 0 && numOfScoreBoosters === 0) {
+    gameOver('You Won!', movePacman)
+  }
+
   // Add pacman class to the next pacIndex
   cells[pacIndex].classList.add('pacman')
 }
 
 // Directions to move ghosts
 const arrOfDirections = [1, -1, rows, -rows]
-
-// Game over text
-const gameOverText = document.querySelector('.game-over-text')
-
-// Function to game over
-const gameOver = () => {
-  document.body.removeEventListener('keyup', movePacman)
-  gameOverText.classList.add('diplay-game-over-text')
-  ghosts.forEach((ghost) => {
-    clearInterval(ghost.intervalId)
-  })
-}
 
 // Move ghosts
 const moveGhosts = () => {
@@ -155,7 +172,7 @@ const moveGhosts = () => {
         cells[ghost.currentIndex].classList.remove('ghost')
         cells[ghost.currentIndex].classList.remove('scared-ghost')
       } else {
-        cells[ghost.currentIndex].classList.contains('pacman') && gameOver()
+        cells[ghost.currentIndex].classList.contains('pacman') && gameOver('Game Over!', movePacman)
         cells[ghost.currentIndex].classList.remove('scared-ghost')
         cells[ghost.currentIndex].classList.remove('ghost')
       }
@@ -175,17 +192,23 @@ const moveGhosts = () => {
 const resetGame = () => {
   // Hide game over text
   gameOverText.classList.remove('diplay-game-over-text')
+  // Re-draw grids
+  drawGrids(layout, cells)
   // Move ghosts to initial positions and timerIds to null
   ghosts.forEach((ghost) => {
-    // Remove current ghosts
-    cells[ghost.currentIndex].classList.remove('ghost')
+    // Remove current ghosts or scared-ghosts class
+    cells[ghost.currentIndex].classList.remove('ghost', 'scared-ghost')
     // Reset ghost positions
     ghost.currentIndex = ghost.startIndex
+    // Clear and nullify interval ids
     clearInterval(ghost.intervalId)
     ghost.intervalId = null
   })
   // Reset score
   incrementScore(0, true)
+  // Rest counts of pacdots and scoreboosters
+  numOfPacDots = 234
+  numOfScoreBoosters = 4
   // Reset pacman position
   cells[pacIndex].classList.remove('pacman')
   pacIndex = 490

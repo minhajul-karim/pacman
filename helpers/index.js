@@ -21,11 +21,13 @@ export const isNextWallOrGhostHome = (cells, nextPacIndex) => {
 }
 
 // Function that helps pacman to eat pacdots
-export const eatPacdot = (cells, pacIndx) => {
+export const hasEatenPacdot = (cells, pacIndx) => {
   if (cells[pacIndx].classList.contains('pac-dot')) {
     cells[pacIndx].classList.remove('pac-dot')
     incrementScore(1)
+    return true
   }
+  return false
 }
 
 // Function that scares ghosts
@@ -43,22 +45,25 @@ export const unScareGhosts = (ghosts) => {
 }
 
 // Function that helps pacman to eat score booster
-export const eatBooster = (cells, pacIndx, ghosts) => {
+export const hasEatenScoreBooster = (cells, pacIndx, ghosts) => {
   if (cells[pacIndx].classList.contains('score-booster')) {
     cells[pacIndx].classList.remove('score-booster')
     incrementScore(100)
     // Scare ghosts
     scareGhosts(ghosts)
     // Un-scare ghosts after 10 seconds
-    setTimeout(() => {
+    const timerId = setTimeout(() => {
       unScareGhosts(ghosts)
     }, 10000)
-  }
+    return timerId
+  } 
+  return false
 }
 
 // Function to generate a random direction
 export const getRandomDirection = (directions) => Math.floor(Math.random() * directions.length)
 
+// Class for ghosts
 export class Ghost {
   constructor(startIndex) {
     this.startIndex = startIndex,
@@ -66,4 +71,26 @@ export class Ghost {
     this.isScared = false,
     this.intervalId = null
   }
+}
+
+// Function to draw grids
+export const drawGrids = (layout, cells) => {
+  layout.forEach((item, index) => {
+    switch (item) {
+      case 0:
+        cells[index].classList.add('pac-dot')
+        break
+      case 1:
+        cells[index].classList.add('wall')
+        break
+      case 2:
+        cells[index].classList.add('ghost-home')
+        break
+      case 3:
+        cells[index].classList.add('score-booster')
+        break
+      default:
+        cells[index].classList.add('empty')
+    }
+  })
 }

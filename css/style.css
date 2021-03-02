@@ -76,9 +76,14 @@ a {
 }
 
 .diplay-game-over-text {
-  top: 30%;
-  left: 24%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .control-container {
