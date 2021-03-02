@@ -249,6 +249,7 @@ var resetGame = function resetGame() {
 // Handle clicking start/restart button
 var startBtn = document.getElementById('start-btn');
 startBtn.addEventListener('click', function () {
+  startBtn.textContent = 'Restart';
   resetGame();
   // Move pacman via keyboard
   document.body.addEventListener('keyup', movePacman);

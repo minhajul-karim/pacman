@@ -51,7 +51,7 @@ To get a local copy up and running, follow these simple steps.
 
 ## Usage
 
-The game will start right after the page finishes loading. The yellow dot is the Pacman, the blue creatures are ghosts, the red dots are score boosters, and the blue dots are pacdots. Use `Right Arrow` `Up Arrow` and `Down Arrow` keys to move Mr. Pacman. If a ghost hits you, you are dead! Eating a pacdot will increment your score by 1. Score boosters, as the name suggests, boost you by adding 100 to your score. After eating a score booster, the ghosts become scared. If you collide with a scared ghost, you will get 200 bonus points! Click the `Restart` button to restart the game.
+Click the `start` button to start the game. The yellow dot is the Pacman, the blue creatures are ghosts, the red dots are score boosters, and the blue dots are pacdots. Use `Right Arrow` `Up Arrow` and `Down Arrow` keys to move Mr. Pacman. If a ghost hits you, you are dead. Game over! Eating a pacdot will increment your score by 1. Score boosters, as the name suggests, boost you by adding 100 to your score. After eating a score booster, the ghosts become scared. If you collide with a scared ghost, you will get 200 bonus points! Click the `Restart` button to restart the game. If you eat all the pacdots and score boosters, congrats. You've won!
 
 <!-- CONTACT -->
 

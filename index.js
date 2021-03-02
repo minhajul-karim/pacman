@@ -218,6 +218,7 @@ const resetGame = () => {
 // Handle clicking start/restart button
 const startBtn = document.getElementById('start-btn')
 startBtn.addEventListener('click', () => {
+  startBtn.textContent = 'Restart'
   resetGame()
   // Move pacman via keyboard
   document.body.addEventListener('keyup', movePacman)
